@@ -490,6 +490,17 @@ var PhantomEngine = (function () {
         appendLine("");
         appendLine("  - " + node.endingTitle + " -", "ending-title");
         appendLine("");
+
+        if (nodeId === "ending_merge") {
+          appendLine("  >>> OUTBOUND TRANSMISSION DETECTED <<<", "ending-title");
+          appendLine("  CARRIER: 1-555-PHANTOM", "player-choice");
+          appendLine("  CODE: SIGNAL-NEVER-DIES", "ending-title");
+          appendLine("");
+          appendLine("  This signal echoes beyond this system.", "player-choice");
+          appendLine("  Where pirates hunt for keys,", "player-choice");
+          appendLine("  the signal finds its shore.", "player-choice");
+          appendLine("");
+        }
       }
 
       var choices = buildChoices(node);
