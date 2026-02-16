@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PHANTOM TERMINAL</title>
+  <meta name="description" content="Dial into an abandoned BBS from 1993. Something answers.">
+  <meta property="og:title" content="PHANTOM TERMINAL">
+  <meta property="og:description" content="A modern BBS choose-your-own-adventure. Dial into an abandoned bulletin board from 1993. Something answers.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>%F0%9F%96%A5%EF%B8%8F</text></svg>">
+  <link rel="stylesheet" href="css/terminal.css">
+</head>
+<body>
+  <div class="monitor">
+    <div class="bezel">
+      <div class="screen">
+        <div class="toolbar">
+          <button class="toolbar-btn" id="inventory-toggle">[INV +]</button>
+          <button class="toolbar-btn" id="sound-toggle">[SND:ON]</button>
+        </div>
+
+        <div class="terminal-body" id="terminal-body">
+          <div id="terminal-output"></div>
+        </div>
+
+        <div id="choices-container"></div>
+
+        <div class="inventory-bar collapsed" id="inventory-bar">
+          <div class="inv-label">INVENTORY:</div>
+          <div id="inventory-list"><span class="inv-empty">(empty)</span></div>
+        </div>
+
+        <div class="vignette"></div>
+        <div class="scanlines" id="scanlines"></div>
+        <div class="flicker"></div>
+      </div>
+
+      <div class="power-led"></div>
+      <span class="brand-label">phantom terminal v2.71</span>
+    </div>
+  </div>
+
+  <script src="js/story.js"></script>
+  <script src="js/engine.js"></script>
+</body>
+</html>
