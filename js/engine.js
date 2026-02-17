@@ -26,6 +26,7 @@ var PhantomEngine = (function () {
     els.inventoryToggle = document.getElementById("inventory-toggle");
     els.soundToggle = document.getElementById("sound-toggle");
     els.scanlines = document.getElementById("scanlines");
+    els.terminalBody = document.getElementById("terminal-body");
 
     els.soundToggle.addEventListener("click", toggleSound);
     els.inventoryToggle.addEventListener("click", toggleInventory);
@@ -63,6 +64,7 @@ var PhantomEngine = (function () {
     gain.gain.exponentialRampToValueAtTime(0.001, state.audioCtx.currentTime + 0.05);
     osc.start(state.audioCtx.currentTime);
     osc.stop(state.audioCtx.currentTime + 0.05);
+    osc.onended = function() { osc.disconnect(); gain.disconnect(); };
   }
 
   function playClick() {
@@ -78,6 +80,7 @@ var PhantomEngine = (function () {
     gain.gain.exponentialRampToValueAtTime(0.001, state.audioCtx.currentTime + 0.08);
     osc.start(state.audioCtx.currentTime);
     osc.stop(state.audioCtx.currentTime + 0.08);
+    osc.onended = function() { osc.disconnect(); gain.disconnect(); };
   }
 
   function playStinger() {
@@ -232,9 +235,30 @@ var PhantomEngine = (function () {
     }
   }
 
+  function getLocationName(nodeId) {
+    var names = {
+      welcome: "Main Menu", welcome_with_door: "Main Menu",
+      boards_main: "Message Boards", boards_general: "General Discussion",
+      boards_echo: "Project ECHO Thread", boards_echo_reversed: "Project ECHO Thread",
+      boards_journal: "Sysop's Journal",
+      files_main: "File Archives", files_readme: "README.TXT",
+      files_echo_warning: "ECHO.EXE", files_echo_run: "ECHO.EXE",
+      files_rosetta: "ROSETTA.KEY", files_void: "VOID_MSG.ENC",
+      chat_enter: "Chat Rooms", chat_kind: "Chat Rooms", chat_suspicious: "Chat Rooms",
+      chat_aggressive: "Chat Rooms", chat_silent: "Chat Rooms", chat_silent_2: "Chat Rooms",
+      chat_trust: "Chat Rooms", chat_cautious: "Chat Rooms", chat_cold: "Chat Rooms",
+      chat_distrust: "Chat Rooms", chat_leave: "Chat Rooms",
+      sysop_enter: "Sysop Door", sysop_docs: "ECHO Documentation",
+      sysop_emergency: "Emergency Protocols", sysop_entity_talk: "Entity Channel",
+      ending_upload: "Ending", ending_disconnect: "Ending",
+      ending_archive: "Ending", ending_merge: "Ending", ending_loop: "Ending",
+    };
+    return names[nodeId] || nodeId;
+  }
+
   function showSavePrompt() {
     clearTerminal();
-    appendText("Save data found.\n\nLast location: " + state.currentNode + "\nItems: " + state.inventory.length + "\n");
+    appendText("Save data found.\n\nLast location: " + getLocationName(state.currentNode) + "\nItems: " + state.inventory.length + "\n");
     showChoices([
       { text: "Continue", handler: function () { loadGame(); updateInventoryDisplay(); goToNode(state.currentNode); } },
       { text: "New Game", handler: function () { clearSave(); resetState(); startBoot(); } },
@@ -262,22 +286,12 @@ var PhantomEngine = (function () {
     scrollToBottom();
   }
 
-  function appendHTML(html) {
-    var div = document.createElement("div");
-    div.innerHTML = html;
-    while (div.firstChild) {
-      els.terminal.appendChild(div.firstChild);
-    }
-    scrollToBottom();
-  }
-
   function appendLine(text, cssClass) {
     appendText(text + "\n", cssClass);
   }
 
   function scrollToBottom() {
-    var container = document.getElementById("terminal-body");
-    container.scrollTop = container.scrollHeight;
+    els.terminalBody.scrollTop = els.terminalBody.scrollHeight;
   }
 
   function typeText(text, callback) {
@@ -352,13 +366,15 @@ var PhantomEngine = (function () {
       els.choicesContainer.appendChild(btn);
     });
     scrollToBottom();
+    var firstEnabled = els.choicesContainer.querySelector(".choice-btn:not(.locked)");
+    if (firstEnabled) firstEnabled.focus();
   }
 
   function handleKeyDown(e) {
     if (e.key === "Escape") {
       if (!state.bootComplete) {
         state.escPressCount++;
-        if (state.escPressCount >= 1) {
+        if (state.escPressCount >= 3) {
           state.bootComplete = true;
           goToNode("ending_loop");
           return;
@@ -373,8 +389,6 @@ var PhantomEngine = (function () {
 
     var key = parseInt(e.key);
     if (key >= 1 && key <= 9) {
-      var btns = els.choicesContainer.querySelectorAll(".choice-btn:not(.locked)");
-      var targetIndex = 0;
       var allBtns = els.choicesContainer.querySelectorAll(".choice-btn");
       var enabledCount = 0;
       for (var i = 0; i < allBtns.length; i++) {
@@ -533,7 +547,6 @@ var PhantomEngine = (function () {
         locked: locked,
         handler: function () {
           appendLine("\n  > " + choice.text, "player-choice");
-          if (choice.gives) giveItem(choice.gives);
           goToNode(choice.next);
         },
       };

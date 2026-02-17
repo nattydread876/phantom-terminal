@@ -388,3 +388,9 @@ html, body {
     padding: 8px;
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .scanlines { animation: none; }
+  .flicker { animation: none; }
+  .power-led { animation: none; opacity: 0.8; }
+}

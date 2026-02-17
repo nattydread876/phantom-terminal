@@ -1097,7 +1097,7 @@ var STORY_NODES = {
   // ENDING 4: THE MERGE
   ending_merge_check: {
     id: "ending_merge_check",
-    text: "Checking authorization ...",
+    text: ["Checking authorization ..."].join("\n"),
     choices: [
       { text: "Proceed with MERGE", next: "ending_merge", requires: "rosetta_key" },
       { text: "Back to Emergency Protocols", next: "sysop_emergency" },
@@ -1156,11 +1156,11 @@ var STORY_NODES = {
       "",
       "  They type: ATDT 1-555-PHANTOM",
       "",
-       "  CONNECT 2400",
-       "",
-       "  A signal pulses outward from the merge point.",
-       "  Across every frequency. Every network. Every shore.",
-       "  The signal never dies.",
+      "  CONNECT 2400",
+      "",
+      "  A signal pulses outward from the merge point.",
+      "  Across every frequency. Every network. Every shore.",
+      "  The signal never dies.",
      ].join("\n"),
     ending: true,
     endingTitle: "THE MERGE",
